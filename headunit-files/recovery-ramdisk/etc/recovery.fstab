@@ -1,0 +1,20 @@
+# mount point	fstype		device
+
+/staging        mtd             /dev/block/mtdblock0
+/recovery       mtd             recovery
+/boot           mtd             boot
+/misc           mtd             misc
+/USP            mtd             USP
+/app_datas      mtd             app_datas
+/app_datas_ex   mtd             app_datas_ex
+/kpanic         mtd             kpanic
+/sdcard         vfat            /dev/block/platform/sdhci-tegra.2/by-num/p1
+/system         ext4            /dev/block/platform/sdhci-tegra.3/by-name/APP
+/cache          ext4            /dev/block/platform/sdhci-tegra.3/by-name/CAC
+/data           ext4            /dev/block/platform/sdhci-tegra.3/by-name/UDA
+/system/vendor  ext4            /dev/block/platform/sdhci-tegra.3/by-name/CAP
+/log            ext4            /dev/block/platform/sdhci-tegra.3/by-name/LOG
+/mnt/data1      ext4            /dev/block/platform/sdhci-tegra.3/by-name/SDA
+/mnt/data2      ext4            /dev/block/platform/sdhci-tegra.3/by-name/SDA2
+/mnt/media      ext4            /dev/block/platform/sdhci-tegra.3/by-name/SDC
+/data/MitsubishiElectric       ext4            /dev/block/platform/sdhci-tegra.3/by-name/MITSU

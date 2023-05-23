@@ -1,0 +1,119 @@
+import /init.recovery.${ro.hardware}.rc
+
+on early-init
+    start ueventd
+    wait /dev/mem
+    wait /dev/kmem
+    wait /dev/urandom
+    wait /dev/graphics/fb0
+    wait /dev/graphics/fb1
+    wait /dev/tegra_dc_ctrl
+    wait /dev/tegra_camera
+    wait /dev/tegra_dc_0
+    wait /dev/tegra_dc_1
+    wait /dev/nvhost-gr3d
+    wait /dev/nvhost-ctrl
+    wait /dev/nvhost-vi
+    wait /dev/knvmap
+    wait /dev/nvmap
+    wait /dev/i2c-0
+    wait /dev/i2c-1
+    wait /dev/i2c-3
+    wait /dev/i2c-4
+
+    # Do deferred initcalls
+    wait /dev/.coldboot_done
+    write /proc/deferred_initcalls 1
+    write /proc/sys/kernel/hung_task_timeout_secs 0
+
+on init
+    export PATH /sbin
+    export ANDROID_ROOT /system
+    export ANDROID_DATA /data
+    export EXTERNAL_STORAGE /sdcard
+
+    symlink /system/etc /etc
+
+    mkdir /mnt
+    mkdir /sdcard
+    mkdir /system
+    mkdir /data
+    mkdir /cache
+    mkdir /vendor
+    mkdir /mnt/usbdrive1
+    mkdir /mnt/usbdrive2
+    mount /tmp /tmp tmpfs
+
+    chown root shell /tmp
+    chmod 0775 /tmp
+
+    symlink /mnt/usbdrive1 /usbdrive1
+    symlink /mnt/usbdrive2 /usbdrive2
+
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 18D1
+    write /sys/class/android_usb/android0/idProduct D001
+    write /sys/class/android_usb/android0/functions adb
+    write /sys/class/android_usb/android0/iManufacturer ${ro.product.manufacturer}
+    write /sys/class/android_usb/android0/iProduct ${ro.product.model}
+    write /sys/class/android_usb/android0/iSerial ${ro.serialno}
+
+    write /sys/devices/platform/tegra-otg/enable_host 1
+
+on boot
+
+    write /sys/class/gpio/export 83
+    write /sys/class/gpio/export 84
+    write /sys/class/gpio/export 85
+    write /sys/class/gpio/gpio83/direction "out"
+    write /sys/class/gpio/gpio84/direction "out"
+    write /sys/class/gpio/gpio85/direction "in"
+    write /sys/class/gpio/gpio85/edge "falling"
+    chown system system /sys/class/gpio/gpio83/value
+    chown system system /sys/class/gpio/gpio84/value
+    write /sys/class/gpio/gpio83/value "1"
+    write /sys/class/gpio/gpio84/value "0"
+
+    ifup lo
+    hostname localhost
+    domainname localdomain
+
+    class_start default
+
+# GPIO Setting for LVDS Serializer
+    write /sys/class/gpio/export 130
+    write /sys/class/gpio/export 131
+    write /sys/class/gpio/export 134
+    write /sys/class/gpio/export 135
+    write /sys/class/gpio/export 156
+    write /sys/class/gpio/export 159
+    write /sys/class/gpio/export 176
+    write /sys/class/gpio/export 177
+    write /sys/class/gpio/gpio156/direction "in"
+    write /sys/class/gpio/gpio159/direction "out"
+    write /sys/class/gpio/gpio176/direction "out"
+    write /sys/class/gpio/gpio177/direction "in"
+    write /sys/class/gpio/gpio156/edge "falling"
+    write /sys/class/gpio/gpio177/edge "falling"
+
+# <16Roid> Display MCU Communication Daemon
+service disp_com_cid /sbin/disp_com_cid
+
+service ueventd /sbin/ueventd
+    critical
+
+service recovery /sbin/recovery
+
+service adbd /sbin/adbd recovery
+    disabled
+
+# Always start adbd on userdebug and eng builds
+on property:ro.debuggable=1
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+
+# Restart adbd so it can run as root
+on property:service.adb.root=1
+    write /sys/class/android_usb/android0/enable 0
+    restart adbd
+    write /sys/class/android_usb/android0/enable 1

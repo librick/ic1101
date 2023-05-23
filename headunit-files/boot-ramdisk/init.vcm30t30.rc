@@ -1,0 +1,577 @@
+#Copyright (c) 2011-2014 NVIDIA Corporation.  All Rights Reserved.
+#
+#NVIDIA Corporation and its licensors retain all intellectual property and
+#proprietary rights in and to this software and related documentation.  Any
+#use, reproduction, disclosure or distribution of this software and related
+#documentation without an express license agreement from NVIDIA Corporation
+#is strictly prohibited.
+
+import init.nv_dev_board.usb.rc
+
+
+
+on early-init
+    mount debugfs debugfs /sys/kernel/debug
+
+on init
+    write /sys/kernel/mm/ksm/pages_to_scan 100
+    write /sys/kernel/mm/ksm/sleep_millisecs 500
+    write /sys/kernel/mm/ksm/run 1
+
+    mkdir /mnt/shell/emulated 0700 shell shell
+    mkdir /storage/emulated 0555 root root
+    mkdir /storage/sdcard1 0555 root root
+
+    export SECONDARY_STORAGE /storage/sdcard1
+    export EXTERNAL_STORAGE /storage/emulated/legacy
+    export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
+    export EMULATED_STORAGE_TARGET /storage/emulated
+
+    # Support legacy paths
+    symlink /storage/emulated/legacy /sdcard
+    symlink /storage/emulated/legacy /mnt/sdcard
+    symlink /storage/sdcard1 /mnt/sdcard2
+    symlink /storage/emulated/legacy /storage/sdcard0
+    symlink /mnt/shell/emulated/0 /storage/emulated/legacy
+
+    # create directory for mounting usb drives
+    mkdir /mnt/usbdrive1 0666 system system
+    mkdir /mnt/usbdrive2 0666 system system
+    mkdir /mnt/usbdrive3 0666 system system
+    #mkdir /mnt/sata 0666 system system
+    symlink /mnt/usbdrive1 /usbdrive1
+    symlink /mnt/usbdrive2 /usbdrive2
+    symlink /mnt/usbdrive3 /usbdrive3
+    #symlink /mnt/sata /sata
+    write /sys/devices/platform/tegra-otg/enable_host 1
+#    update /mnt/usbdrive1/update.txt
+    mkdir /mnt/data1 0666 system system
+    mkdir /mnt/data2 0666 system system
+    mkdir /mnt/media 0666 system system
+
+on fs
+    setprop ro.audio.flinger_standbytime_ms 10
+    setprop ro.crypto.tmpfs_options size=256m,mode=0771,uid=1000,gid=1000
+    setprop ro.crypto.umount_sd false
+    # don't support encryption on filesystem
+    setprop ro.crypto.state unsupported
+    #wait /dev/block/platform/sdhci-tegra.3/by-name/APP
+    #mount ext4 /dev/block/platform/sdhci-tegra.3/by-name/APP /system rw
+    # Create NVSI filter symlink
+    symlink /data/data/com.nvidia.NvCPLSvc/files/com.nvidia.nvsiutilv1.xml /system/etc/permissions/com.nvidia.nvsiutilv1.xml
+
+    mount_all /fstab.vcm30t30
+    chmod 0771 /log
+    chown system vehicle_rw /log
+    chmod 0775 /mnt/data1
+    chown system vehicle_rw /mnt/data1
+    chmod 0775 /mnt/data2
+    chown system vehicle_rw /mnt/data2
+    chmod 0770 /mnt/media
+    chown media_rw media_rw /mnt/media
+
+    chmod 0666 /mnt/data1/com.mitsubishielectric.ada.appservice.navigation/unitid.txt
+    chmod 0666 /mnt/data2/com.mitsubishielectric.ada.appservice.navigation/unitid.txt
+
+    start setup-zram
+
+    # initialize PPP files.
+    start init_ppp_files
+
+on post-fs-data
+    mkdir /data/misc/wifi 0770 wifi wifi
+    mkdir /data/misc/wifi/sockets 0770 wifi wifi
+    mkdir /data/misc/dhcp 0770 dhcp dhcp
+    mkdir /data/nvcam 0700 media camera
+    chown dhcp dhcp /data/misc/dhcp
+
+    chmod 0660 /data/misc/wifi/wpa_supplicant.conf
+    chown wifi wifi /data/misc/wifi/wpa_supplicant.conf
+
+    chmod 0660 /data/misc/wifi/hostapd.conf
+    chown wifi wifi /data/misc/wifi/hostapd.conf
+
+    mkdir /data/misc/wminput 0776 system system
+
+    #mkdir /data/media 0770 media_rw media_rw
+
+    mkdir /data/local/WallPaperUserData 0770 system vehicle_rw
+    mkdir /data/local/WallPaperHgw 0770 system vehicle_rw
+    mkdir /data/local/WallPaperZiba 0770 system vehicle_rw
+    mkdir /data/local/WallPaperLive 0770 system vehicle_rw
+
+    # TI GPS
+    mkdir /data/gnss/ 0770 gps system
+    mkdir /data/gnss/log_MD/ 0770 gps system
+    mkdir /data/gnss/logs/ 0770 gps system
+    mkdir /data/gnss/nvs/ 0770 gps system
+
+    mkdir /data/MitsubishiElectric 0666 system system
+
+    mount_all /fstab.vcm30t30_post
+    chmod 0770 /data/MitsubishiElectric
+    chown system vehicle_rw /data/MitsubishiElectric
+    mkdir /data/MitsubishiElectric/ada 0770 system vehicle_rw
+
+    # Set indication (checked by vold) that we have finished this action
+    setprop vold.post_fs_data_done 1
+
+    # kmodd daemon table file
+    chmod 0660 /system/etc/kmod.conf
+    start kmodd
+
+    # Acuralink Daemon
+    mkdir /dev/acuralink 0770 system vehicle_rw
+
+on early-boot
+# Load HDMI Receiver driver
+    insmod /vendor/lib/modules/adv7480.ko
+
+on boot
+
+# boot/shutdown (83:AndroidState0, 84:AndroidState1, 85:VCM_SLEEP)
+    write /sys/class/gpio/export 83
+    write /sys/class/gpio/export 84
+    write /sys/class/gpio/export 85
+    write /sys/class/gpio/gpio83/direction "out"
+    write /sys/class/gpio/gpio84/direction "out"
+    write /sys/class/gpio/gpio85/direction "in"
+    write /sys/class/gpio/gpio85/edge "falling"
+    chown system system /sys/class/gpio/gpio83/value
+    chown system system /sys/class/gpio/gpio84/value
+    chown system system /sys/devices/platform/gpio-keys.0/disabled_keys
+    chmod 0664 /sys/devices/platform/gpio-keys.0/disabled_keys
+
+# low battery
+    write /sys/class/gpio/gpio10/edge "both"
+    write /sys/class/gpio/gpio17/edge "both"
+    write /sys/class/gpio/gpio22/edge "both"
+    chown system system /sys/devices/platform/melco_pm/usb1_vbus_off_req
+    chown system system /sys/devices/platform/melco_pm/usb2_vbus_off_req
+    chown system system /sys/devices/platform/melco_pm/usb3_vbus_off_req
+    chown system system /sys/devices/platform/melco_pm/usb1_vbus_off_drop
+    chown system system /sys/devices/platform/melco_pm/usb2_vbus_off_drop
+    chown system system /sys/devices/platform/melco_pm/usb3_vbus_off_drop
+    chown system system /sys/bus/i2c/drivers/tmon-tmp411-sensor/4-004d/alert_en
+
+# USB power config
+    chown system system /sys/devices/platform/melco_pm/usb1_auto_power_config
+
+# emmc repair
+    chown system system /sys/class/mmc_host/mmc0/mmc0:0001/errcnt
+    chown system system /sys/class/mmc_host/mmc0/mmc0:0001/reset
+
+# USB Certification
+    chown system system /sys/devices/platform/tegra-ehci.0/test_mode
+    chown system system /sys/devices/platform/tegra-ehci.1/test_mode
+    chown system system /sys/devices/platform/tegra-ehci.2/test_mode
+    chown system system /sys/devices/platform/tegra-ehci.0/suspend_test
+    chown system system /sys/devices/platform/tegra-ehci.1/suspend_test
+    chown system system /sys/devices/platform/tegra-ehci.2/suspend_test
+    chown system system /sys/devices/platform/tegra-otg/enable_host
+    chown system system /sys/devices/platform/tegra-otg/enable_device
+    chown system system /sys/class/android_usb/android0/enable
+    chown system system /sys/class/android_usb/android0/idVendor
+    chown system system /sys/class/android_usb/android0/idProduct
+    chmod 0664 /sys/devices/platform/tegra-otg/enable_device
+    chmod 0664 /sys/devices/platform/tegra-otg/enable_host
+    chmod 0664 /sys/class/android_usb/android0/enable
+    chmod 0664 /sys/class/android_usb/android0/idVendor
+    chmod 0664 /sys/class/android_usb/android0/idProduct
+
+# bluetooth
+    # change back to bluetooth from system
+    chown bluetooth net_bt_stack /data/misc/bluetooth
+
+    # UART device
+    chmod 0660 /dev/ttyHS3
+    chown bluetooth net_bt_stack /dev/ttyHS3
+
+    # XM Lib
+    chmod 0666 /dev/ttyHS0
+
+    # power up/down interface
+    chmod 0660 /sys/class/rfkill/rfkill0/state
+    chmod 0660 /sys/class/rfkill/rfkill0/type
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
+
+    write /sys/class/rfkill/rfkill0/state 0
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/state
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/type
+
+    # bluetooth MAC address programming
+    chown bluetooth net_bt_stack ro.bt.bdaddr_path
+    chown bluetooth net_bt_stack /system/etc/bluetooth
+    chown bluetooth net_bt_stack /data/misc/bluetooth
+    setprop ro.bt.bdaddr_path "/data/misc/bluetooth/bdaddr"
+
+#disabel rild access to ttyACM
+    setprop ro.ril.devicename /dev/ttyACMn
+
+#wifi
+    setprop wifi.supplicant wpa_supplicant
+    setprop wifi.interface wlan0
+
+# thermal daemon
+    chown system system /sys/bus/i2c/drivers/tmon-tmp411-sensor/4-004d/remote_temp_high_limit
+    chown system system /d/tegra_emc/over_temp_state
+
+# nvdps
+    chown system system /sys/class/graphics/fb0/device/nvdps
+
+# backlight
+    chown system system /sys/class/backlight/pwm-backlight/brightness
+
+# didim
+    chown system system /sys/class/graphics/fb0/device/smartdimmer/enable
+    chown system system /sys/class/graphics/fb0/device/smartdimmer/aggressiveness
+
+# Default Read Ahead value for sdcards
+    write /sys/block/mmcblk0/queue/read_ahead_kb 2048
+    write /sys/block/mmcblk1/queue/read_ahead_kb 2048
+
+# Load WiFi driver
+    insmod /system/lib/modules/compat/compat.ko
+    insmod /system/lib/modules/compat/cfg80211.ko
+    insmod /system/lib/modules/compat/mac80211.ko
+    insmod /system/lib/modules/compat/wlcore.ko
+    insmod /system/lib/modules/compat/wl18xx.ko
+    insmod /system/lib/modules/compat/wlcore_sdio.ko
+
+# BB mapping symbolic name to the logging ttyACM port
+    symlink /dev/ttyACM2 /dev/log_modem
+
+# Disable Tegra RTC wakeup by default
+    write /sys/devices/platform/tegra_rtc/power/wakeup disabled
+
+# Enable USB Remote Wakeup on USB2 for modems
+#    write /sys/bus/usb/devices/1-1/power/wakeup enabled
+
+# GPIO Setting for HW Version
+    write /sys/class/gpio/export 129
+    write /sys/class/gpio/gpio129/direction "in"
+
+# GPIO Setting for AV Ap.Service
+    write /sys/class/gpio/export 142
+    write /sys/class/gpio/export 143
+    write /sys/class/gpio/gpio142/direction "out"
+    write /sys/class/gpio/gpio143/direction "out"
+    write /sys/class/gpio/gpio142/value 1
+    write /sys/class/gpio/gpio143/value 1
+
+# Load EC/NC DSP driver
+    insmod /vendor/lib/modules/ak7736b.ko
+
+# Load Gyroscope driver
+    mkdir /dev/gyrolib 0770 system vehicle_rw
+    insmod /vendor/lib/modules/a3g4250d.ko
+
+# chown VideoDecoder driver sysfs
+    chown system system /sys/bus/i2c/drivers/adv7181d/2-0021/pwron
+
+# chown HDMI Receiver driver sysfs
+    chown system system /sys/bus/i2c/drivers/adv7480/2-0070/pwron
+
+# chown Gyroscope driver sysfs
+    chown system system /sys/devices/platform/spi_tegra.4/spi4.2/enable_device
+    chown system system /sys/devices/platform/spi_tegra.4/spi4.2/pollrate_ms
+    chown system system /sys/devices/platform/spi_tegra.4/spi4.2/pollrate_temp_ms
+    chown system system /sys/devices/platform/spi_tegra.4/spi4.2/temp
+
+# NOR Access Library
+    mkdir /dev/norlib 0770 root vehicle_rw
+
+# Create syscomver file
+    write /dev/log/syscomver ""
+    chown root log /dev/log/syscomver
+    chmod 0664 /dev/log/syscomver
+
+# Create vehicle status read/write point
+    mkdir /dev/vehicle_sts 0775 root vehicle_rw
+    mkdir /dev/vehicle_sts/gpsaccuracy 0775 root system
+    write /dev/vehicle_sts/gpsaccuracy/gpsaccuracy ""
+    chown root system /dev/vehicle_sts/gpsaccuracy/gpsaccuracy
+    chmod 0664 /dev/vehicle_sts/gpsaccuracy/gpsaccuracy
+
+# Create vehicle status read/write point
+    write /dev/vehicle_sts/vehiclespeedpulse ""
+    chown root vehicle_rw /dev/vehicle_sts/vehiclespeedpulse
+    chmod 0664 /dev/vehicle_sts/vehiclespeedpulse
+
+service norctrld /vendor/bin/norctrld
+    class core
+
+service hostapd_bin /system/bin/hostapd -d /data/misc/wifi/hostapd.conf
+   socket wpa_wlan0 dgram 660 wifi wifi
+   disabled
+   oneshot
+
+service p2p_supplicant /system/bin/wpa_supplicant \
+        -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf -N \
+        -ip2p0  -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf \
+        -puse_p2p_group_interface=1 \
+        -e/data/misc/wifi/entropy.bin
+    class main
+    socket wpa_wlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+service wpa_supplicant /system/bin/wpa_supplicant \
+    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
+    -e/data/misc/wifi/entropy.bin
+    class main
+    socket wpa_wlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+service dhcpcd_wlan0 /system/bin/dhcpcd -aABKL
+    class main
+    disabled
+    oneshot
+
+service dhcpcd_p2p /system/bin/dhcpcd -aABKL
+    class main
+    disabled
+    oneshot
+
+service dhcpcd_eth0 /system/bin/dhcpcd -ABKL -f/system/etc/dhcpcd/dhcpcd.conf
+     class main
+     disabled
+     oneshot
+
+service dhcpcd_bnep0 /system/bin/dhcpcd -ABKL
+    class main
+    disabled
+    oneshot
+
+service iprenew_wlan0 /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot
+
+service iprenew_p2p /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot
+
+service iprenew_eth0 /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot
+
+# <16Roid> Display MCU Communication Daemon
+service disp_com_cid /sbin/disp_com_cid
+    user root
+    group root
+    disabled
+service disp_com_meter /system/vendor/bin/disp_com_meter
+    class main
+    user root
+    group root
+
+#MediaCore
+service jmcs /system/bin/jmcs
+    class main
+    user root
+    group root
+
+service prop_daemon /system/bin/prop_daemon
+    class main
+    user root
+    group root
+
+#service sdcard /system/bin/sdcard /data/media /mnt/shell/emulated 1023 1023
+service sdcard /system/bin/sdcard /mnt/media /mnt/shell/emulated 1023 1023
+    class late_start
+
+# bugreport is triggered by the VOLUME-DOWN and VOLUME-UP keys
+service bugreport /system/bin/dumpstate -d -v -o /data/storage/bugreports/bugreport
+    class main
+    disabled
+    oneshot
+    keycodes 115 114
+
+# TI GPS
+service uim /system/bin/uim-sysfs
+    class core
+    user root
+    group root
+    oneshot
+
+service devproxy /system/bin/devproxy
+    class main
+    disabled
+    oneshot
+    user root
+    group root
+
+service agnss_connect /system/bin/agnss_connect -p
+    class main
+    disabled
+    oneshot
+    user root
+    group root
+
+service Log_MD /system/bin/Log_MD
+    class main
+    disabled
+    oneshot
+
+# Prepare TF service
+import init.tf.rc
+
+# create filesystems if necessary
+service setup_fs /system/bin/setup_fs \
+        /dev/block/platform/sdhci-tegra.3/by-name/UDA \
+        /dev/block/platform/sdhci-tegra.3/by-name/CAC
+    class core
+    user root
+    group root
+    oneshot
+
+# Load kmodd daemon
+service kmodd /system/vendor/bin/kmodd
+    socket kmodd stream 0666 root system
+    ioprio be 2
+    disabled
+
+service load_group2 /system/vendor/bin/kmodc load 2
+    user root
+    group root
+    oneshot
+    disabled
+
+service lowbat /vendor/bin/lowbat.sh
+    class main
+    user system
+    group system
+
+service emmc_repair /vendor/bin/emmc_repair.sh
+    class main
+    user system
+    group system
+
+# Thermal daemon (FAN control)
+service thermald /vendor/bin/thermald.sh
+    class main
+    user system
+    group system
+
+on property:service.thermald.restart=1
+    restart thermald
+
+# USB OTG switch
+on property:persist.sys.usb1_mode=host
+#MediaCorePatch Start
+    write /sys/devices/virtual/android_usb/android0/f_uwd/auto_disconnect "1"
+#MediaCorePatch End
+    write /sys/devices/platform/tegra-otg/enable_host 1
+    write /sys/module/tegra_otg/parameters/disable_failsafe 0
+
+on property:persist.sys.usb1_mode=device
+#MediaCorePatch Start
+    write /sys/devices/virtual/android_usb/android0/f_uwd/auto_disconnect "0"
+#MediaCorePatch End
+    write /sys/devices/platform/tegra-otg/enable_device 1
+    write /sys/module/tegra_otg/parameters/disable_failsafe 1
+
+on property:sys.boot_completed=1
+    start load_group2
+
+# USB Logger
+service setup_logger /system/vendor/bin/setup-logger.sh
+    class main
+    user root
+    group vehicle_rw
+    oneshot
+
+service usbdetectd /system/vendor/bin/usbdetectd correctlog
+    class main
+    disabled
+
+# 3rdParty Apps install
+service auto_install /system/vendor/bin/auto_install.sh
+   class main
+   oneshot
+
+#SDRefresh
+service sdrefresh /system/vendor/bin/sdrefresh 3072 300
+    class main
+    oneshot
+
+# Acuralink Daemon
+service acuralinkcmnd /system/vendor/bin/acuralinkcmnd
+    class main
+    user root
+    group root
+
+# Diag daemon
+service diag_daemon /system/vendor/bin/diag_daemon
+    class main
+    user root
+    group root vehicle_rw
+
+# Log daemon
+service log_daemon /system/vendor/bin/log_daemon
+    class main
+    user root
+    group root vehicle_rw
+
+# dialup deamon
+service dialupd /system/vendor/bin/dialupd
+    class main
+    user root
+    group root vehicle_rw
+
+# MirrorLink DHCP deamon
+service mldhcpd /system/vendor/bin/mldhcpd
+    class main
+    user root
+    group root vehicle_rw
+
+# MirrorLink RTPD deamon
+service mlc_rtpd /system/vendor/bin/mlc_rtpd
+    class main
+    user root
+    group root vehicle_rw
+
+service rebindEthernet /system/bin/rebindEthernet.sh
+	class main
+	user root
+	group root
+
+service lpaserver /vendor/bin/lpaserver
+    class main
+    user root
+    group root
+
+service crmtouchserver /vendor/bin/crmtouchserver
+    class main
+    user root
+    group root
+
+on property:dhcp.eth0.pid=*
+    start rebindEthernet
+
+# Tegra force update process
+service daupdater /sbin/daupdater
+    class main
+    user root
+    group root
+    oneshot
+    disabled
+
+# zram swap
+service setup-zram /system/vendor/bin/setup-zram.sh
+    user root
+    group root
+    oneshot
+    disabled
+
+# initialize PPP files
+service init_ppp_files /vendor/bin/init_ppp_files.sh
+    user root
+    group root
+    oneshot
+    disabled

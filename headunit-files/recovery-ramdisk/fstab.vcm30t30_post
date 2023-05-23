@@ -1,0 +1,7 @@
+# Android fstab file.
+#<src>                                                  <mnt_point>         <type>    <mnt_flags>                                                                         <fs_mgr_flags>
+# The filesystem that contains the filesystem checker binary (typically /system) cannot
+# specify MF_CHECK, and must come before any filesystems that do specify MF_CHECK
+
+# We remount because we first mount as rw in order to generate NVSI symlink. See init.rc for details.
+/dev/block/platform/sdhci-tegra.3/by-name/MITSU         /data/MitsubishiElectric   ext4      noatime,nosuid,nodev,journal_async_commit,data=writeback,nodelalloc,discard,errors=remount-ro    wait,check

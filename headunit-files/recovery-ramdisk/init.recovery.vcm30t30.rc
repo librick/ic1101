@@ -1,0 +1,12 @@
+on early-init
+    mount debugfs debugfs /sys/kernel/debug
+
+on init
+
+on fs
+    mount ext4 /dev/block/platform/sdhci-tegra.3/by-name/APP /system wait ro remount
+    mount ext4 /dev/block/platform/sdhci-tegra.3/by-name/UDA /data wait noatime nosuid nodev
+    mount ext4 /dev/block/platform/sdhci-tegra.3/by-name/CAC /cache wait noatime nosuid nodev
+
+on boot
+

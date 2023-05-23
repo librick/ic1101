@@ -1,0 +1,14 @@
+# Android fstab file.
+#<src>                                                  <mnt_point>         <type>    <mnt_flags>                                                                         <fs_mgr_flags>
+# The filesystem that contains the filesystem checker binary (typically /system) cannot
+# specify MF_CHECK, and must come before any filesystems that do specify MF_CHECK
+
+# We remount because we first mount as rw in order to generate NVSI symlink. See init.rc for details.
+/dev/block/platform/sdhci-tegra.3/by-name/APP           /system             ext4      ro                                                                          wait
+/dev/block/platform/sdhci-tegra.3/by-name/CAC           /cache              ext4      noatime,nosuid,nodev,journal_async_commit,data=writeback,nodelalloc,discard,errors=remount-ro    wait,check
+/dev/block/platform/sdhci-tegra.3/by-name/UDA           /data               ext4      noatime,nosuid,nodev,journal_async_commit,data=writeback,nodelalloc,discard,errors=remount-ro    wait,check
+/dev/block/platform/sdhci-tegra.3/by-name/CAP           /system/vendor      ext4      ro                                                                                          wait
+/dev/block/platform/sdhci-tegra.3/by-name/LOG           /log                ext4      noatime,nosuid,nodev,journal_async_commit,data=writeback,nodelalloc,discard,errors=remount-ro    wait,check
+/dev/block/platform/sdhci-tegra.3/by-name/SDA           /mnt/data1          ext4      noatime,nosuid,nodev,journal_async_commit,data=writeback,nodelalloc,discard,errors=remount-ro    wait,check
+/dev/block/platform/sdhci-tegra.3/by-name/SDA2          /mnt/data2          ext4      noatime,nosuid,nodev,journal_async_commit,data=writeback,nodelalloc,discard,errors=remount-ro    wait,check
+/dev/block/platform/sdhci-tegra.3/by-name/SDC           /mnt/media          ext4      noatime,nosuid,nodev,journal_async_commit,data=writeback,nodelalloc,discard,errors=remount-ro    wait,check

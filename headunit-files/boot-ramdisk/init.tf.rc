@@ -1,0 +1,9 @@
+# start tf_daemon service
+service tf_daemon /system/bin/tf_daemon -storageDir /data/tf -d
+    class main
+    user root
+    group shell
+
+# may restart due to /data/tf not existing yet
+on property:init.svc.tf_daemon=restarting
+    mkdir /data/tf
