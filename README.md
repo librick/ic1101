@@ -84,3 +84,7 @@ https://news.ycombinator.com/item?id=36052753
 ## Contributors and Thanks
 Thanks to [@Tunas1337](https://github.com/Tunas1337) for all his help and late-night hacking sessions.
 Much of this work is his in one form or another, particularly as it relates to more esoteric (but useful) knowledge of Android internals. Thanks :)
+
+## License
+This project is MIT licensed.
+Where this project includes code from Android and/or the AOSP, refer to [Android licenses](https://source.android.com/docs/setup/about/licenses). Where this project references code belonging to Mitsubishi Motors Corporation and/or Honda Motor Co., Ltd., it is understood that such code is proprietary and is the intellectual property of their respective owners. Any original research specific to this project is MIT licensed.
