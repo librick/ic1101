@@ -76,6 +76,11 @@ The source code contains a lot of acronyms. I've documented some here.
     - This is used in the context of an LVDS serializer
     - I think this is what the infotainment system uses to interface with CAN
 
+## Hacker News
+I originally published this project on Hacker News.
+The resulting discussion may be useful:  
+https://news.ycombinator.com/item?id=36052753
+
 ## Contributors and Thanks
 Thanks to [@Tunas1337](https://github.com/Tunas1337) for all his help and late-night hacking sessions.
 Much of this work is his in one form or another, particularly as it relates to more esoteric (but useful) knowledge of Android internals. Thanks :)
