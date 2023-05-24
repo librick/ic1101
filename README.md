@@ -11,6 +11,7 @@ This is to document my own research only.
 I will not be held liable if you break your car.
 
 All information in this repo *should* already be in the public domain or otherwise be publicly discoverable. I've intentionally avoided directly including `.apk`/`.odex` files or other "confidential"/proprietary information.
+
 ## Technical Overview
 Infotainment SoC: NVIDIA Tegra 3, c. 2012  
 Infotainment OS: Android 4.2.2 (Jellybean), released Oct. 29, 2012  
@@ -18,9 +19,12 @@ Infotainment OS Framwork: Mitsubishi-developed framework, codenamed "Andromeda"
 CAN buses: B-CAN and F-CAN
 
 ## eMMC and Flash
-- There are three `mmc<n>` devices under `/sys/class/mmc_host`: `mmc0`, `mmc1`, `mmc2`
+- There are three `mmc<n>` devices under `/sys/class/mmc_host`:
+    - `mmc0`
+    - `mmc1`
+    - `mmc2`
 - `cat /sys/class/mmc_host/mmc0/mmc0:0001/name` gives the string `R1J55A`
-- The eMMC interface is used for **flash storage**, for **Wi-Fi and Bluetooth**
+- The eMMC interface is used for **flash storage** and for **Wi-Fi and Bluetooth**
 
 ### Flash Storage
 - The infotainment unit uses a Micron 8GB eMMC flash chip for storage
@@ -28,7 +32,10 @@ CAN buses: B-CAN and F-CAN
 - The flash is available via the sysfs interface at `/sys/class/mmc_host/mmc0/mmc:0001`
 - It is exposed via sysfs at `/sys/class/mmc_host/mmc0/`
 
-I haven't validated that the ordering of `mmc_host` devices within sysfs is constant. Check the `name` property, e.g., `cat /sys/class/mmc_host/mmc0/mmc0:0001/name`. On my system it returns `R1J55A`, the CID of the flash chip.
+I haven't validated that the ordering of `mmc_host` devices within sysfs is constant.  
+Check the `name` property/file:  
+`cat /sys/class/mmc_host/mmc0/mmc0:0001/name`.  
+On my system it returns `R1J55A`, the CID of the flash chip.
 
 ### Wi-Fi and Bluetooth
 - Wi-Fi and Bluetooth are provided by a shared TI WiLink 8 chip
@@ -72,4 +79,3 @@ The source code contains a lot of acronyms. I've documented some here.
 ## Contributors and Thanks
 Thanks to [@Tunas1337](https://github.com/Tunas1337) for all his help and late-night hacking sessions.
 Much of this work is his in one form or another, particularly as it relates to more esoteric (but useful) knowledge of Android internals. Thanks :)
-
