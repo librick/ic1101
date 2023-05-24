@@ -71,6 +71,6 @@ The source code contains a lot of acronyms. I've documented some here.
     - I think this is what the infotainment system uses to interface with CAN
 
 ## Contributors and Thanks
-Thanks to @Tunas1337 for all his help and late-night hacking sessions.
+Thanks to [@Tunas1337](https://github.com/Tunas1337) for all his help and late-night hacking sessions.
 Much of this work is his in one form or another, particularly as it relates to more esoteric (but useful) knowledge of Android internals. Thanks :)
 
