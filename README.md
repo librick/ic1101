@@ -4,7 +4,7 @@ An open research project into my 2021 Honda Civic infotainment system
 **Assuming you have root access on your headunit, I highly recommend enabling adb *and* switching the USB port(s) to device mode. See docs/adb.md for more info. Do this before doing anything else, it may save you from bricking your device.**
 
 ## Legal Notice
-⚠️ I'm not affiliated with Honda Motor Co., Ltd. I'm not affiliated with Mitsubishi. Honda and Honda Civic are registered trademarks. This is for personal use only. I can't condone software piracy.⚠️
+⚠️ I'm not affiliated with Honda Motor Co., Ltd. I'm not affiliated with Mitsubishi. Honda and Honda Civic are registered trademarks. This is for personal use only. I can't condone software piracy. ⚠️
 
 I take no responsibility for bricked/damaged cars, headunits, etc.  
 This is to document my own research only.
