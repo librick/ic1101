@@ -26,7 +26,6 @@ CAN buses: B-CAN and F-CAN
 - The infotainment unit uses a Micron 8GB eMMC flash chip for storage
 - Its CID is R1J55A, confirmed via the sysfs interface
 - The flash is available via the sysfs interface at `/sys/class/mmc_host/mmc0/mmc:0001`
-- For the eMMC standard itself, see: JESD84-B51.pdf
 - It is exposed via sysfs at `/sys/class/mmc_host/mmc0/`
 
 I haven't validated that the ordering of `mmc_host` devices within sysfs is constant. Check the `name` property, e.g., `cat /sys/class/mmc_host/mmc0/mmc0:0001/name`. On my system it returns `R1J55A`, the CID of the flash chip.
