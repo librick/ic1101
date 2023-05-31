@@ -1,6 +1,30 @@
 # Honda Civic Reverse Engineering
 An open research project into my 2021 Honda Civic infotainment system
 
+## Project Goals and Thoughts for the Future
+Since first sharing this project, I've gotten some great feedback and wanted to document some areas where PRs would be most welcome.
+Here are few areas where I'd like to see public collaboration, contributions, and pull requests. Feel free to start a fork:
+- **Boot and recovery images from different Honda Civic models and trims**
+    - Having access to these would make it easier to develop public-interest exploits, upgrade Android, and boot different Android ROMs or operating systems
+- **Open source versions of native/compiled binaries and libraries**
+    - These would provide documentation to other developers and lower the barrier to entry for writing Honda-specific code
+    - This would make it easier for third-parties to design replacement parts such as backup cameras, making replacement parts cheaper
+    - This would make upgrading/flashing newer versions of Android easier, as propriertary binaries are used in the headunit update process
+    - See `/sbin/earlyrvc` in the boot/recovery ramdisks
+    - See `/sbin/daupdater` in the boot ramdisk
+- **Open source exploit chains to root headunits**
+    - This would allow anyone to root their headunit for free
+    - By being open source, these exploit chains/rooting tools would safer and more widely audited than paid third-party rooting services
+    - This would also encourage research into specific exisiting headunit vulnerabilities, creating opportunities to patch them
+- **Open-access documentation of CAN IDs and packet formats**
+    - Honda vehicles have two CAN networks, F-CAN and B-CAN. They implement some standard CAN messages but otherwise gatekeep proprietary CAN message formats
+    - Having publicly-available docs on known CAN messages would make comprehensive diagnostic tools cheaper for third-party mechanics
+    - Having cheaper diagnostic tools would make repairs cheaper for consumers
+    - Having open-access diagnostics would empower consumers to make educated decisions when taking their vehicles in for repair
+- **Support for vehicles beyond the Honda Civic**
+    - I started with the Honda Civic because I have it on hand, but the same or similar software is used for several Honda lines
+    - There's no reason this project can't encompass cars beyond the Honda Civic
+
 **Assuming you have root access on your headunit, I highly recommend enabling adb *and* switching the USB port(s) to device mode. See docs/adb.md for more info. Do this before doing anything else, it may save you from bricking your device.**
 
 ## Legal Notice
@@ -11,6 +35,13 @@ This is to document my own research only.
 I will not be held liable if you break your car.
 
 All information in this repo *should* already be in the public domain or otherwise be publicly discoverable. I've intentionally avoided directly including `.apk`/`.odex` files or other "confidential"/proprietary information.
+
+## Rooting your Honda Civic
+I rooted my 2021 Honda Civic by using this paid service: http://www.autohack.org/vehicles/.
+I went with the $25 option. It appears to use a WebKit exploit and likely an exploit for Android 4.2.2 to achieve root.
+One of my motivations for starting this project is that I want to have an open source alternative to proprietary tools like this.
+But at the time of writing, that service is the easiest/fastest way to root the headunit.
+It worked for me, but use it at your own risk.
 
 ## Technical Overview
 Infotainment SoC: NVIDIA Tegra 3, c. 2012  
@@ -80,6 +111,9 @@ The source code contains a lot of acronyms. I've documented some here.
 I originally published this project on Hacker News.
 The resulting discussion may be useful:  
 https://news.ycombinator.com/item?id=36052753
+
+## Blog Post
+In addition to the content here, I've also covered this project on my blog, [juniperspring.xyz](https://juniperspring.xyz/posts/honda-reverse-engineering/).
 
 ## Contributors and Thanks
 Thanks to [@Tunas1337](https://github.com/Tunas1337) for all his help and late-night hacking sessions.
