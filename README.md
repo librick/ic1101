@@ -36,12 +36,8 @@ I will not be held liable if you break your car.
 
 All information in this repo *should* already be in the public domain or otherwise be publicly discoverable. I've intentionally avoided directly including `.apk`/`.odex` files or other "confidential"/proprietary information.
 
-## Rooting your Honda Civic
-I rooted my 2021 Honda Civic by using this paid service: http://www.autohack.org/vehicles/.
-I went with the $25 option. It appears to use a WebKit exploit and likely an exploit for Android 4.2.2 to achieve root.
-One of my motivations for starting this project is that I want to have an open source alternative to proprietary tools like this.
-But at the time of writing, that service is the easiest/fastest way to root the headunit.
-It worked for me, but use it at your own risk.
+## Rooting your Honda Headunit
+See: https://github.com/librick/ic1101/blob/main/docs/rooting.md
 
 ## Technical Overview
 Infotainment SoC: NVIDIA Tegra 3, c. 2012  
@@ -114,6 +110,15 @@ https://news.ycombinator.com/item?id=36052753
 
 ## Blog Post
 In addition to the content here, I've also covered this project on my blog, [juniperspring.xyz](https://juniperspring.xyz/posts/honda-reverse-engineering/).
+
+## News Articles (Why we need open source vehicle software)
+- [Radio Station Snafu in Seattle Bricks Some Mazda Infotainment Systems](https://arstechnica.com/cars/2022/02/radio-station-snafu-in-seattle-bricks-some-mazda-infotainment-systems/)
+- [Flash Memory Wear Killing Older Teslas](https://www.tomshardware.com/news/flash-memory-wear-killing-older-teslas-due-to-excessive-data-logging-report)
+- [TikTok Trend Helps Thieves Hack Kia, Hyundai Models](https://www.bloomberg.com/news/newsletters/2023-01-11/tiktok-trend-helps-thieves-hack-kia-hyundai-models)
+- [Hyundai, Kia Patch Bug Allowing Car Thefts with a USB Cable](https://www.bleepingcomputer.com/news/security/hyundai-kia-patch-bug-allowing-car-thefts-with-a-usb-cable/)
+- [Honda Hack Can Unlock and Start Your Car](https://www.tomsguide.com/news/honda-hack-can-unlock-and-start-your-car-what-you-need-to-know)
+- [1.7 Million Hondas Are Being Investigated for Phantom Breaking](https://arstechnica.com/cars/2022/02/nhtsa-to-investigate-honda-accords-and-cr-vs-over-phantom-braking/)
+
 
 ## Hackaday Article on Hyundai Ionic
 I found an interesting article on Hackaday on the Hyundai Ioniq’s infotainment system, including it here for reference:
