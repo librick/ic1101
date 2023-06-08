@@ -115,6 +115,10 @@ https://news.ycombinator.com/item?id=36052753
 ## Blog Post
 In addition to the content here, I've also covered this project on my blog, [juniperspring.xyz](https://juniperspring.xyz/posts/honda-reverse-engineering/).
 
+## Hackaday Article on Hyundai Ionic
+I found an interesting article on Hackaday on the Hyundai Ioniq’s infotainment system, including it here for reference:
+https://hackaday.com/2023/06/08/hacking-a-hyundai-ioniqs-infotainment-system-again-after-security-fixes/
+
 ## Contributors and Thanks
 Thanks to [@Tunas1337](https://github.com/Tunas1337) for all his help and late-night hacking sessions.
 Much of this work is his in one form or another, particularly as it relates to more esoteric (but useful) knowledge of Android internals. Thanks :)
