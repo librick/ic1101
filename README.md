@@ -71,12 +71,13 @@ Where this project includes code from Android and/or the AOSP, refer to [Android
 Thanks to [@Tunas1337](https://github.com/Tunas1337) for all his help and late-night hacking sessions.
 Much of this work is his in one form or another, particularly as it relates to more esoteric (but useful) knowledge of Android internals. Thanks :)
 
-## Miscellaneous Articles on Car Hacking
+## Miscellaneous Articles and Resources
 - [Radio Station Snafu in Seattle Bricks Some Mazda Infotainment Systems](https://arstechnica.com/cars/2022/02/radio-station-snafu-in-seattle-bricks-some-mazda-infotainment-systems/)
 - [Flash Memory Wear Killing Older Teslas](https://www.tomshardware.com/news/flash-memory-wear-killing-older-teslas-due-to-excessive-data-logging-report)
 - [TikTok Trend Helps Thieves Hack Kia, Hyundai Models](https://www.bloomberg.com/news/newsletters/2023-01-11/tiktok-trend-helps-thieves-hack-kia-hyundai-models)
 - [Hyundai, Kia Patch Bug Allowing Car Thefts with a USB Cable](https://www.bleepingcomputer.com/news/security/hyundai-kia-patch-bug-allowing-car-thefts-with-a-usb-cable/)
 - [Honda Hack Can Unlock and Start Your Car](https://www.tomsguide.com/news/honda-hack-can-unlock-and-start-your-car-what-you-need-to-know)
 - [1.7 Million Hondas Are Being Investigated for Phantom Breaking](https://arstechnica.com/cars/2022/02/nhtsa-to-investigate-honda-accords-and-cr-vs-over-phantom-braking/)
+- [GitHub, jersacct - 2016 Honda Pilot One-Click Root](https://github.com/jersacct/2016PilotOneClick)
 - [greenluigi1, Hyundai Ioniq Hacking, Part 5](https://programmingwithstyle.com/posts/howihackedmycarpart5/)
 - [greenluigi1, Hyundai Ioniq Hacking, Part 6](https://programmingwithstyle.com/posts/myhackedcarisdoomed/)
