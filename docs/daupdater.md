@@ -5,7 +5,7 @@ The daupdater binary can be found in the boot ramdisk at `/sbin/daupdater`.
 It appears to be responsible for parsing update files from USB flash drives, applying them, and rebooting the headunit to recovery mode, at which point it is presumed that updates are installed.
 
 ## USB Updates
-For an update file to be applied, the flash drive must contain at least two files: a SwUpdate2.txt (or SwUpdate.txt) text file and a SwUpdate.mdt zip archive. The SwUpdate.mdt zip archive must contain `system/build.prop` and `/system/vendor/build.prop` files.
+For an update file to be applied, the flash drive must contain at least two files: a SwUpdate2.txt (or SwUpdate.txt) text file and a SwUpdate.mdt zip archive. The SwUpdate.mdt zip archive must contain `system/build.prop` and `system/vendor/build.prop` files.
 
 The daupdater binary parses the `system/build.prop` file and reads its `ro.build.id` property. The daupdater binary also parses the `system/vendor/build.prop` file and reads its `custom_rom.type` property. In order for the update to be applied, the values of these properties (as parsed from the SwUpdate.mdt zip archive) must match the values of these properties as found on the headunit.
 
