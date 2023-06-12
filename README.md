@@ -101,7 +101,8 @@ The source code contains a lot of acronyms. I've documented some here.
 - HFL - Hands Free Link
 - LVDS - Low Voltage Differential Signalling
     - This is used in the context of an LVDS serializer
-    - I think this is what the infotainment system uses to interface with CAN
+    - LVDS is commonly used for high-speed video, graphics, and video camera data transfers
+    - It's possible that LVDS is used for the headunit display and/or backup camera; more research is needed to confirm this
 
 ## Hacker News
 I originally published this project on Hacker News.
