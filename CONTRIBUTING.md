@@ -64,3 +64,8 @@ This will elucidate different headunit versions and accelerate the development o
 - If no issue is applicable to your branch, use a descriptive branch name
 - Prefer dashes (-) to underscores (_)
 - Don't use slashes (/)
+
+## Sponsorship
+If you want to sponsor me, I've set up a [GitHub sponsors page](https://github.com/sponsors/librick).
+Not at all required, very much appreciated  
+~ Eric (librick) 🌱
