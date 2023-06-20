@@ -78,6 +78,7 @@ Much of this work is his in one form or another, particularly as it relates to m
 - [Hyundai, Kia Patch Bug Allowing Car Thefts with a USB Cable](https://www.bleepingcomputer.com/news/security/hyundai-kia-patch-bug-allowing-car-thefts-with-a-usb-cable/)
 - [Honda Hack Can Unlock and Start Your Car](https://www.tomsguide.com/news/honda-hack-can-unlock-and-start-your-car-what-you-need-to-know)
 - [1.7 Million Hondas Are Being Investigated for Phantom Breaking](https://arstechnica.com/cars/2022/02/nhtsa-to-investigate-honda-accords-and-cr-vs-over-phantom-braking/)
+- [Honda Civic CAN Bus Reverse Engineering](https://ashfaqahmad.ca/honda-civic-can-bus-reverse-engineering/)
 - [GitHub, jersacct - 2016 Honda Pilot One-Click Root](https://github.com/jersacct/2016PilotOneClick)
 - [greenluigi1, Hyundai Ioniq Hacking, Part 5](https://programmingwithstyle.com/posts/howihackedmycarpart5/)
 - [greenluigi1, Hyundai Ioniq Hacking, Part 6](https://programmingwithstyle.com/posts/myhackedcarisdoomed/)
