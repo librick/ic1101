@@ -10,6 +10,7 @@ Use [GitHub discussions](https://github.com/librick/ic1101/discussions) for corr
 
 ## Technical Overview
 Infotainment SoC: NVIDIA Tegra 3, c. 2012  
+SoC Arch: Quad-core ARM Cortex-A9 (ARM v7)
 Infotainment OS: Android 4.2.2 (Jellybean), released Oct. 29, 2012  
 Infotainment OS Framework: Mitsubishi-developed framework, codenamed "Andromeda"  
 CAN buses: B-CAN and F-CAN
