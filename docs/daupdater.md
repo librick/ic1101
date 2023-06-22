@@ -1,4 +1,4 @@
-# daupdater
+# Display Audio Updater
 ## How Updates Work
 - The daupdater binary (`/sbin/daupdater`) handles Android updates
 - It looks for USB storage devices under `/sys/devices/platform/tegra-ehci.<n>`
