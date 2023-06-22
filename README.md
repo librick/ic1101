@@ -11,7 +11,7 @@ Use [GitHub discussions](https://github.com/librick/ic1101/discussions) for corr
 ## Technical Overview
 Infotainment SoC: NVIDIA Tegra 3, c. 2012  
 Infotainment OS: Android 4.2.2 (Jellybean), released Oct. 29, 2012  
-Infotainment OS Framwork: Mitsubishi-developed framework, codenamed "Andromeda"  
+Infotainment OS Framework: Mitsubishi-developed framework, codenamed "Andromeda"  
 CAN buses: B-CAN and F-CAN
 
 ## Rooting your Honda Headunit
