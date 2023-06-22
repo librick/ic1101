@@ -1,10 +1,24 @@
 # daupdater
-
-## Overview
-The daupdater binary can be found in the boot ramdisk at `/sbin/daupdater`.
-It appears to be responsible for parsing update files from USB flash drives, applying them, and rebooting the headunit to recovery mode, at which point it is presumed that updates are installed.
+## How Updates Work
+- The daupdater binary (`/sbin/daupdater`) handles Android updates
+- It looks for USB storage devices under `/sys/devices/platform/tegra-ehci.<n>`
+- It expects to find the USB block device at `/dev/block/sda1`
+- It mounts `/dev/block/sda1` as `/mnt/usbdrive1` (type is vfat)
+- It checks that either `SwUpdate2.txt` or `SwUpdate.txt` exists
+- It checks that `SwUpdate.mdt` (a zip archive) exists
+- It parses system properties from `SwUpdate.mdt`
+- It performs checks on `ro.build.id` and `custom_top.type` system properties
+- It writes the command `--update_package=/mnt/usbdrive<n>/SwUpdate.mdt` to the file `/cache/recovery/command`
+- It reboots to recovery mode
+- The recovery partition contains the file `res/keys`
+- Recovery checks the signature of `SwUpdate.mdt` against `res/keys`
+- Assuming the signature matches, the update is installed
+- See https://source.android.com/docs/core/ota/nonab#life-ota-update
 
 ## USB Updates
+The daupdater binary is in the boot ramdisk at `/sbin/daupdater`.
+It's responsible for checking for update files on USB flash drives and directing Android recovery to apply them, rebooting the headunit to recovery mode to start the actual update.
+
 For an update file to be applied, the flash drive must contain at least two files: a SwUpdate2.txt (or SwUpdate.txt) text file and a SwUpdate.mdt zip archive. The SwUpdate.mdt zip archive must contain `system/build.prop` and `system/vendor/build.prop` files.
 
 The daupdater binary parses the `system/build.prop` file and reads its `ro.build.id` property. The daupdater binary also parses the `system/vendor/build.prop` file and reads its `custom_rom.type` property. In order for the update to be applied, the values of these properties (as parsed from the SwUpdate.mdt zip archive) must match the values of these properties as found on the headunit.
