@@ -1,5 +1,5 @@
 # Honda Civic Reverse Engineering
-An open research project into my 2021 Honda Civic infotainment system
+An open research project into 10th generation Honda Civic infotainment systems.
 
 ## Getting Started
 Documentation is provided as Markdown files in the `docs` directory.
