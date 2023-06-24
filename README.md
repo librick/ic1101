@@ -1,6 +1,6 @@
 # Honda Civic Reverse Engineering
 An open research project into 10th generation Honda Civic infotainment systems.
-This covers most Honda Civics from 2016-2021, inclusive. Lower-end trims such as the 2021 Civic LX are not supported, as they use a different headunit.
+This covers most Honda Civics from 2016-2021, inclusive. Lower-end trims such as the 2021 Civic LX are not supported as they use a different headunit.
 
 ## Getting Started
 Documentation is provided as Markdown files in the `docs` directory.
