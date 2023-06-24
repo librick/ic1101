@@ -90,7 +90,7 @@ where `%s` is some templated string:
     - --update_package=/mnt/usbdrive1/SwUpdate.mdt
     - --update_package=/mnt/usbdrive1/%s/SwUpdate.mdt
 
-It's worth emphasizing that both `tegra-ehci.2` and `tegra-ehci.0` map to `/mnt/usbdrive1`. I would expect `tegra-ehci.2` to map to `/mnt/usbdrive3`.
+It's worth emphasizing that both `tegra-ehci.2` and `tegra-ehci.0` map to `/mnt/usbdrive1`. I would expect `tegra-ehci.2` to map to `/mnt/usbdrive3`. This might be because the headunit only has two physical USB connectors.
 
 An update is able to be applied when all of the following hold:
 - currentCustomRomType matches newCustomRomType
