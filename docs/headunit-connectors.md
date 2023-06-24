@@ -1,5 +1,5 @@
 # Headunit Connectors, Anti-Theft
-Wiring/connector diagrams provided in the datasheets directory.  
+Wiring/connector diagrams are provided in the datasheets directory.  
 The headunit assembly consists of two physical parts: a metal box and a display assembly.
 
 ⚠️ *Before removing the headunit, enable ADB. This lets you bypass the anti-theft lock screen when you reconnect the headunit later.*
