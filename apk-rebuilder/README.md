@@ -21,6 +21,10 @@ Instructions written for Linux; exact steps vary by operating system.
 1. Run `python3 src/main.py --input-dir ./input --output-dir ./output`
 1. See [Outputs](#outputs) for a description of what gets created.
 
+## Performance
+
+Expect the script to take 10-15 minutes. The logs should be verbose enough that you'll know if it's hanging. Otherwise just let it do its thing.
+
 ## Outputs
 
 The following directories and files are created. All paths are relative to `--output-dir`:
