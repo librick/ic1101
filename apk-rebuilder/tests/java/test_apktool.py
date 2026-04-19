@@ -1,14 +1,14 @@
 import asyncio
 from pathlib import Path
 
-from conftest import RecordingInvoker
+from conftest import RecordingRunner
 
 from java.apktool import Apktool
 
 
 class TestApktool:
-    def test_install_framework_builds_argv(self, recording_invoker: RecordingInvoker) -> None:
-        apktool = Apktool(Path("/fake/apktool.jar"), recording_invoker)
+    def test_install_framework_builds_argv(self, recording_runner: RecordingRunner) -> None:
+        apktool = Apktool(Path("/fake/apktool.jar"), recording_runner)
 
         asyncio.run(
             apktool.install_framework(
@@ -17,7 +17,7 @@ class TestApktool:
             )
         )
 
-        assert recording_invoker.calls == [
+        assert recording_runner.calls == [
             [
                 "java",
                 "-jar",
@@ -29,8 +29,8 @@ class TestApktool:
             ]
         ]
 
-    def test_decode_builds_argv(self, recording_invoker: RecordingInvoker) -> None:
-        apktool = Apktool(Path("/fake/apktool.jar"), recording_invoker)
+    def test_decode_builds_argv(self, recording_runner: RecordingRunner) -> None:
+        apktool = Apktool(Path("/fake/apktool.jar"), recording_runner)
 
         asyncio.run(
             apktool.decode(
@@ -40,7 +40,7 @@ class TestApktool:
             )
         )
 
-        assert recording_invoker.calls == [
+        assert recording_runner.calls == [
             [
                 "java",
                 "-jar",

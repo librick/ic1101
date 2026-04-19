@@ -1,6 +1,8 @@
 from pathlib import Path
+from typing import Self
 
-from java.subprocess_invoker import SubprocessInvoker
+from file_utils import check_file_exists
+from process.process_runner import ProcessResult, ProcessRunner
 
 
 class JarCli:
@@ -11,9 +13,16 @@ class JarCli:
     Subclasses should never spawn processes directly.
     """
 
-    def __init__(self, jar: Path, invoker: SubprocessInvoker) -> None:
+    def __init__(self, jar: Path, runner: ProcessRunner) -> None:
         self._jar = jar
-        self._invoker = invoker
+        self._runner = runner
 
-    async def _invoke(self, subcommand: str, args: list[str]) -> None:
-        await self._invoker(["java", "-jar", str(self._jar), subcommand, *args])
+    @classmethod
+    def build(cls, jar: Path, runner: ProcessRunner) -> Self:
+        """Construct an instance, verifying the jar exists first."""
+        check_file_exists(jar)
+        return cls(jar, runner)
+
+    async def _invoke(self, subcommand: str, args: list[str]) -> ProcessResult:
+        argv = ["java", "-jar", str(self._jar), subcommand, *args]
+        return await self._runner.run(argv)

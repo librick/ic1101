@@ -17,12 +17,45 @@ line-length = 120
 
 [tool.ruff.lint]
 select = [
-    "E",
-    "W",
-    "F",
-    "I",
-    "UP",
+    "A",        # flake8-builtins (shadowing)
+    "ASYNC",    # async footguns
+    "B",        # flake8-bugbear
+    "C4",       # flake8-comprehensions
+    "D201",     # no blank line before function docstring
+    "D202",     # no blank line after function docstring
+    "D210",     # no surrounding whitespace in docstring
+    "D400",     # docstring first line ends in period
+    "D419",     # empty docstring
+    "DTZ",      # timezone-aware datetimes
+    "E",        # pycodestyle errors
+    "F",        # pyflakes
+    "I",        # isort
+    "ISC",      # flake8-implicit-str-concat
+    "PIE",      # flake8-pie
+    "PLE",      # pylint errors
+    "PLR1704",  # redefined argument from outer scope
+    "PLW",      # pylint warnings
+    "PTH",      # pathlib over os.path
+    "RUF008",   # mutable class default
+    "RUF100",   # unused noqa
+    "TID251",   # banned imports
+    "TRY203",   # useless try/except
+    "TRY400",   # use logger.exception instead of logger.error
+    "TRY401",   # redundant exception in logger.exception
+    "UP",       # pyupgrade
+    "W",        # pycodestyle warnings
 ]
+ignore = [
+    "ASYNC240",
+    "ISC003",
+]
+
+[tool.ruff.lint.flake8-implicit-str-concat]
+allow-multiline = false
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"pytest.main".msg = "pytest.main requires special handling that is easy to mess up!"
+"unittest".msg = "Use pytest"
 
 [tool.pyright]
 pythonVersion = "3.13"

@@ -4,8 +4,8 @@ import pytest
 
 from file_utils import (
     check_file_exists,
-    find_files_with_extension_non_recursive,
     find_paired_files,
+    list_files_with_extension,
     resolve_empty_dir,
 )
 
@@ -54,7 +54,7 @@ class TestResolveEmptyDir:
         target = tmp_path / "out"
         sentinel = _touch(target / "sentinel.txt")
 
-        with pytest.raises(FileExistsError, match="is non-empty"):
+        with pytest.raises(FileExistsError, match="is not empty"):
             resolve_empty_dir(target)
 
         assert sentinel.is_file()
@@ -63,14 +63,14 @@ class TestResolveEmptyDir:
         target = tmp_path / "out"
         _touch(target / ".hidden")
 
-        with pytest.raises(FileExistsError, match="is non-empty"):
+        with pytest.raises(FileExistsError, match="is not empty"):
             resolve_empty_dir(target)
 
     def test_empty_subdirectory_counts_as_non_empty(self, tmp_path: Path) -> None:
         target = tmp_path / "out"
         (target / "sub").mkdir(parents=True)
 
-        with pytest.raises(FileExistsError, match="is non-empty"):
+        with pytest.raises(FileExistsError, match="is not empty"):
             resolve_empty_dir(target)
 
     def test_raises_filenotfounderror_when_parent_missing(self, tmp_path: Path) -> None:
@@ -96,18 +96,18 @@ class TestCheckFileExists:
     def test_raises_filenotfounderror_for_missing_path(self, tmp_path: Path) -> None:
         target = tmp_path / "missing.txt"
 
-        with pytest.raises(FileNotFoundError, match="file not found at"):
+        with pytest.raises(FileNotFoundError, match="file not found:"):
             check_file_exists(target)
 
-    def test_raises_oserror_for_directory(self, tmp_path: Path) -> None:
-        with pytest.raises(OSError, match="not a regular file"):
+    def test_raises_isadirectoryerror_for_directory(self, tmp_path: Path) -> None:
+        with pytest.raises(IsADirectoryError, match="expected file, found directory"):
             check_file_exists(tmp_path)
 
     def test_raises_filenotfounderror_for_broken_symlink(self, tmp_path: Path) -> None:
         link = tmp_path / "link.txt"
         link.symlink_to(tmp_path / "missing.txt")
 
-        with pytest.raises(FileNotFoundError, match="file not found at"):
+        with pytest.raises(FileNotFoundError, match="file not found:"):
             check_file_exists(link)
 
 
@@ -140,14 +140,14 @@ class TestFindPairedFiles:
         with pytest.raises(ValueError, match="companion_ext"):
             find_paired_files(tmp_path, ".odex", bad_ext)
 
-    def test_raises_valueerror_for_file_path(self, tmp_path: Path) -> None:
+    def test_raises_notadirectoryerror_for_file_path(self, tmp_path: Path) -> None:
         file_path = _touch(tmp_path / "a.txt")
 
-        with pytest.raises(ValueError, match="is not a directory"):
+        with pytest.raises(NotADirectoryError, match="expected directory, found file"):
             find_paired_files(file_path, ".odex", ".jar")
 
-    def test_raises_valueerror_for_nonexistent_path(self, tmp_path: Path) -> None:
-        with pytest.raises(ValueError, match="is not a directory"):
+    def test_raises_filenotfounderror_for_nonexistent_path(self, tmp_path: Path) -> None:
+        with pytest.raises(FileNotFoundError, match="directory not found"):
             find_paired_files(tmp_path / "missing", ".odex", ".jar")
 
     def test_orphan_source_excluded(self, tmp_path: Path) -> None:
@@ -198,13 +198,13 @@ class TestFindPairedFiles:
         assert result == []
 
 
-class TestFindFilesWithExtensionNonRecursive:
+class TestListFilesWithExtension:
     def test_returns_sorted_matching_files(self, tmp_path: Path) -> None:
         _touch(tmp_path / "c.apk")
         _touch(tmp_path / "a.apk")
         _touch(tmp_path / "b.jar")
 
-        result = find_files_with_extension_non_recursive(tmp_path, ".apk")
+        result = list_files_with_extension(tmp_path, ".apk")
 
         assert result == [tmp_path / "a.apk", tmp_path / "c.apk"]
 
@@ -212,15 +212,15 @@ class TestFindFilesWithExtensionNonRecursive:
         _touch(tmp_path / "a.apk")
         _touch(tmp_path / "sub" / "b.apk")
 
-        result = find_files_with_extension_non_recursive(tmp_path, ".apk")
+        result = list_files_with_extension(tmp_path, ".apk")
 
         assert result == [tmp_path / "a.apk"]
 
     @pytest.mark.parametrize("bad_ext", ["", "apk", "a.pk", "apk."])
     def test_raises_valueerror_for_invalid_extension(self, tmp_path: Path, bad_ext: str) -> None:
         with pytest.raises(ValueError, match="alphanumerics"):
-            find_files_with_extension_non_recursive(tmp_path, bad_ext)
+            list_files_with_extension(tmp_path, bad_ext)
 
-    def test_raises_valueerror_for_non_directory(self, tmp_path: Path) -> None:
-        with pytest.raises(ValueError, match="is not a directory"):
-            find_files_with_extension_non_recursive(tmp_path / "missing", ".apk")
+    def test_raises_filenotfounderror_for_nonexistent_path(self, tmp_path: Path) -> None:
+        with pytest.raises(FileNotFoundError, match="directory not found"):
+            list_files_with_extension(tmp_path / "missing", ".apk")

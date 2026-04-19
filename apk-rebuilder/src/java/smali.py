@@ -12,15 +12,15 @@ class Smali(JarCli):
     async def assemble(
         self,
         *,
-        input_dir: Path,
+        input_smali_dir: Path,
         output_dex: Path,
     ) -> None:
         """Run `smali assemble` to compile a directory of .smali files into a .dex.
 
         Args:
-            input_dir: Directory containing .smali source files to
+            input_smali_dir: Directory containing .smali source files to
                 assemble.
             output_dex: Path where the resulting .dex file will be
                 written.
         """
-        await self._invoke("assemble", [str(input_dir), "--output", str(output_dex)])
+        await self._invoke("assemble", [str(input_smali_dir), "--output", str(output_dex)])
