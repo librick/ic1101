@@ -1,6 +1,7 @@
 import asyncio
 import contextlib
 from asyncio.subprocess import PIPE
+from pathlib import Path
 
 from process.process_runner import (
     ProcessFailed,
@@ -54,10 +55,12 @@ class ProcessRunnerAsyncio(ProcessRunner):
     def __init__(
         self,
         *,
+        default_cwd: Path | None = None,
         default_timeout: float | None = None,
         default_stdout_handler: StreamHandler | None = None,
         default_stderr_handler: StreamHandler | None = None,
     ) -> None:
+        self._default_cwd = default_cwd
         self._default_timeout = default_timeout
         self._default_stdout_handler = default_stdout_handler
         self._default_stderr_handler = default_stderr_handler
@@ -66,16 +69,18 @@ class ProcessRunnerAsyncio(ProcessRunner):
         self,
         argv: list[str],
         *,
+        cwd: Path | None = None,
         stdout_handler: StreamHandler | None = None,
         stderr_handler: StreamHandler | None = None,
         timeout: float | None = None,  # noqa: ASYNC109 - drives subprocess kill/reap; caller-side timeout would leak child
     ) -> ProcessResult:
+        effective_cwd = cwd if cwd is not None else self._default_cwd
         effective_timeout = timeout if timeout is not None else self._default_timeout
         effective_stdout = stdout_handler if stdout_handler is not None else self._default_stdout_handler
         effective_stderr = stderr_handler if stderr_handler is not None else self._default_stderr_handler
 
         try:
-            proc = await asyncio.create_subprocess_exec(*argv, stdout=PIPE, stderr=PIPE)
+            proc = await asyncio.create_subprocess_exec(*argv, cwd=effective_cwd, stdout=PIPE, stderr=PIPE)
         except (FileNotFoundError, PermissionError, OSError) as e:
             raise ProcessSpawnFailed(argv, str(e)) from e
 

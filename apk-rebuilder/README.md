@@ -29,22 +29,24 @@ Expect the script to take 10-15 minutes. The logs should be verbose enough that 
 
 The following directories and files are created. All paths are relative to `--output-dir`:
 
-| Directory                        | Description                                                                                  |
+| Path                             | Description                                                                                  |
 | -------------------------------- | -------------------------------------------------------------------------------------------- |
 | `unzipped-zip`                   | Extracted contents of `MRC<...>.zip` update file                                             |
 | `unzipped-mdt`                   | Extracted contents of `SwUpdate.mdt`; contains Android filesystem                            |
-| `system-app-smali`               | Smali files produced by disassembling `system/app/*.odex` files with baksmali                |
-| `system-app-classes`             | `classes.dex` files reassembled from system app smali files with smali                       |
-| `system-app-apks-repacked`       | Rebuilt APKs with injected `classes.dex` files; ready for use with JADX                      |
-| `vendor-app-smali`               | Smali files produced by disassembling `system/vendor/app/*.odex` files with baksmali         |
-| `vendor-app-classes`             | `classes.dex` files reassembled from vendor app smali files with smali                       |
-| `vendor-app-apks-repacked`       | Rebuilt APKs with injected `classes.dex` files; ready for use with JADX                      |
+| `ramdisk`                        | Ramdisk blob carved out of `boot.img` (gzipped or raw cpio archive)                          |
+| `extracted-ramdisk`              | Ramdisk contents extracted via `cpio` (init scripts, `init.rc`, root filesystem, etc.)       |
 | `system-framework-smali`         | Smali files produced by disassembling `system/framework/*.odex` files with baksmali          |
 | `system-framework-classes`       | `classes.dex` files reassembled from system framework smali files with smali                 |
 | `system-framework-jars-repacked` | Rebuilt JARs with injected `classes.dex` files; ready for use with JADX                      |
 | `vendor-framework-smali`         | Smali files produced by disassembling `system/vendor/framework/*.odex` files with baksmali   |
 | `vendor-framework-classes`       | `classes.dex` files reassembled from vendor framework smali files with smali                 |
 | `vendor-framework-jars-repacked` | Rebuilt JARs with injected `classes.dex` files; ready for use with JADX                      |
+| `system-app-smali`               | Smali files produced by disassembling `system/app/*.odex` files with baksmali                |
+| `system-app-classes`             | `classes.dex` files reassembled from system app smali files with smali                       |
+| `system-app-apks-repacked`       | Rebuilt APKs with injected `classes.dex` files; ready for use with JADX                      |
+| `vendor-app-smali`               | Smali files produced by disassembling `system/vendor/app/*.odex` files with baksmali         |
+| `vendor-app-classes`             | `classes.dex` files reassembled from vendor app smali files with smali                       |
+| `vendor-app-apks-repacked`       | Rebuilt APKs with injected `classes.dex` files; ready for use with JADX                      |
 | `apktool-system-apps`            | Decoded resources for each system app (`system/app/*.apk`) via apktool                       |
 | `apktool-vendor-apps`            | Decoded resources (XML layouts, drawables, values, manifest) for each vendor app via apktool |
 | `apktool-vendor-framework`       | Decoded vendor framework resources from `framework-res.apk` via apktool                      |

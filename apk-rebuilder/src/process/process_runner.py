@@ -1,5 +1,6 @@
 from collections.abc import Callable
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Protocol
 
 StreamHandler = Callable[[bytes], None]
@@ -41,6 +42,7 @@ class ProcessRunner(Protocol):
         self,
         argv: list[str],
         *,
+        cwd: Path | None = None,
         stdout_handler: StreamHandler | None = None,
         stderr_handler: StreamHandler | None = None,
         timeout: float | None = None,  # noqa: ASYNC109 - drives subprocess kill/reap; caller-side timeout would leak child

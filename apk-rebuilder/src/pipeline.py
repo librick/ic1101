@@ -7,11 +7,14 @@ import apk_resources
 import deodex
 import process
 from baksmali_noise import BAKSMALI_DEODEX_NOISE_PATTERNS
+from boot_img import carve_out_ramdisk, extract_ramdisk
 from bootclasspath import get_bootclasspath_jar_names
 from file_utils import (
     check_binary_exists,
     delete_and_recreate_dir,
     delete_dir,
+    delete_file,
+    find_file_by_name,
     list_files_with_extension,
     resolve_empty_dir,
     resolve_files_in_dirs,
@@ -77,6 +80,8 @@ async def run_pipeline(input_dir: Path, output_dir: Path, jvm_jobs: int) -> None
 
     unzipped_zip_dir = output_dir_resolved / "unzipped-zip"
     unzipped_mdt_dir = output_dir_resolved / "unzipped-mdt"
+    ramdisk_path = output_dir_resolved / "ramdisk"
+    extracted_ramdisk_dir = output_dir_resolved / "extracted-ramdisk"
     system_framework_smali_dir = output_dir_resolved / "system-framework-smali"
     system_framework_classes_dir = output_dir_resolved / "system-framework-classes"
     system_framework_jars_repacked_dir = output_dir_resolved / "system-framework-jars-repacked"
@@ -95,6 +100,8 @@ async def run_pipeline(input_dir: Path, output_dir: Path, jvm_jobs: int) -> None
 
     delete_and_recreate_dir(unzipped_zip_dir)
     delete_and_recreate_dir(unzipped_mdt_dir)
+    delete_file(ramdisk_path)
+    delete_and_recreate_dir(extracted_ramdisk_dir)
     delete_and_recreate_dir(apktool_system_apps_dir)
     delete_and_recreate_dir(apktool_vendor_apps_dir)
     delete_dir(apktool_vendor_framework_dir)
@@ -110,6 +117,12 @@ async def run_pipeline(input_dir: Path, output_dir: Path, jvm_jobs: int) -> None
     system_framework_dir = unzipped_mdt_dir / "system" / "framework"
     vendor_framework_dir = unzipped_mdt_dir / "system" / "vendor" / "framework"
     vendor_framework_res_apk = vendor_framework_dir / "framework-res.apk"
+
+    boot_img_path = find_file_by_name(unzipped_mdt_dir, "boot.img")
+    logger.info("carving out ramdisk from boot.img at %s to %s", boot_img_path, ramdisk_path)
+    carve_out_ramdisk(boot_img=boot_img_path, out_path=ramdisk_path)
+    logger.info("extracting ramdisk from %s to %s", ramdisk_path, extracted_ramdisk_dir)
+    await extract_ramdisk(ramdisk=ramdisk_path, out_dir=extracted_ramdisk_dir, runner=default_runner)
 
     bootclasspath_jars = resolve_files_in_dirs(
         names=get_bootclasspath_jar_names(),

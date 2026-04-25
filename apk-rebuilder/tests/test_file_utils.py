@@ -4,6 +4,7 @@ import pytest
 
 from file_utils import (
     check_file_exists,
+    find_file_by_name,
     find_paired_files,
     list_files_with_extension,
     resolve_empty_dir,
@@ -14,6 +15,47 @@ def _touch(path: Path) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.touch()
     return path
+
+
+class TestFindFileByName:
+    def test_finds_file_at_top_level(self, tmp_path: Path) -> None:
+        target = _touch(tmp_path / "target.txt")
+
+        assert find_file_by_name(tmp_path, "target.txt") == target
+
+    def test_finds_file_in_nested_subdirectory(self, tmp_path: Path) -> None:
+        target = _touch(tmp_path / "a" / "b" / "target.txt")
+
+        assert find_file_by_name(tmp_path, "target.txt") == target
+
+    def test_raises_filenotfounderror_when_no_match(self, tmp_path: Path) -> None:
+        _touch(tmp_path / "other.txt")
+
+        with pytest.raises(FileNotFoundError, match="not found under"):
+            find_file_by_name(tmp_path, "target.txt")
+
+    def test_raises_runtimeerror_when_multiple_matches(self, tmp_path: Path) -> None:
+        _touch(tmp_path / "a" / "target.txt")
+        _touch(tmp_path / "b" / "target.txt")
+
+        with pytest.raises(RuntimeError, match="multiple files"):
+            find_file_by_name(tmp_path, "target.txt")
+
+    def test_directory_with_matching_name_ignored(self, tmp_path: Path) -> None:
+        (tmp_path / "target.txt").mkdir()
+        target = _touch(tmp_path / "sub" / "target.txt")
+
+        assert find_file_by_name(tmp_path, "target.txt") == target
+
+    def test_raises_filenotfounderror_for_nonexistent_parent_dir(self, tmp_path: Path) -> None:
+        with pytest.raises(FileNotFoundError, match="directory not found"):
+            find_file_by_name(tmp_path / "missing", "target.txt")
+
+    def test_raises_notadirectoryerror_when_parent_is_file(self, tmp_path: Path) -> None:
+        file_path = _touch(tmp_path / "a.txt")
+
+        with pytest.raises(NotADirectoryError, match="expected directory, found file"):
+            find_file_by_name(file_path, "target.txt")
 
 
 class TestResolveEmptyDir:

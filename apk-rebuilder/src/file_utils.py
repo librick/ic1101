@@ -11,10 +11,27 @@ def _validate_extension(name: str, value: str) -> None:
         raise ValueError(f"{name} must be a dot followed by alphanumerics, got {value!r}")
 
 
+def find_file_by_name(parent_dir: Path, name: str) -> Path:
+    """Recursively find the unique file named `name` under `parent_dir`."""
+    check_dir_exists(parent_dir)
+    matches = sorted(p for p in parent_dir.rglob(name) if p.is_file())
+    if not matches:
+        raise FileNotFoundError(f"{name!r} not found under {parent_dir}")
+    if len(matches) > 1:
+        raise RuntimeError(f"multiple files named {name!r} under {parent_dir}: {matches}")
+    return matches[0]
+
+
 def delete_dir(path: Path) -> None:
     """Remove `path` if it exists."""
     if path.exists():
         shutil.rmtree(path)
+
+
+def delete_file(path: Path) -> None:
+    """Remove `path` if it exists."""
+    if path.exists():
+        path.unlink()
 
 
 def delete_and_recreate_dir(path: Path) -> None:
