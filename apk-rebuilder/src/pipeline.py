@@ -55,10 +55,10 @@ async def run_pipeline(input_dir: Path, output_dir: Path, jvm_jobs: int) -> None
     if len(zip_files) != 1:
         raise PipelineError(f"expected exactly one .zip file in {input_dir}, found {len(zip_files)}")
     zip_path = zip_files[0]
-    logger.info("Found input archive: %s", zip_path)
+    logger.info("found input archive: %s", zip_path)
 
     output_dir_resolved = resolve_empty_dir(output_dir)
-    logger.info("Output will be written to %s", output_dir_resolved)
+    logger.info("output will be written to %s", output_dir_resolved)
 
     def to_stderr(line: bytes) -> None:
         sys.stderr.buffer.write(line)

@@ -60,6 +60,7 @@ Tools that run against this codebase. Don't restate conventions these already en
 
 ## Log message format
 
+- Don't capitalize the first character of log messages unless there's a compelling context-sensitive reason to do so
 - Values (paths, IDs, counts) appear unquoted in context unless quoting prevents ambiguity
 - Use a colon for labeled values: `exit code: 1`, `output directory: /tmp/foo`
 - One sentence per log line; split multi-part information into multiple log calls
