@@ -1,0 +1,19 @@
+[project]
+name = "aidl-rebuilder"
+version = "0.0.0"
+requires-python = ">=3.13"
+dependencies = [
+    "pyyaml",
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --strict-markers"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
