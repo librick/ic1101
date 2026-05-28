@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.eggs/
+*.egg-info/
+dist/
+build/
+
+# uv
+.venv/
+
+# Environment
+.env
+
+# Editor
+.vscode/
+.idea/
+
+# Project output
+output/
