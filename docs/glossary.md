@@ -1,12 +1,12 @@
 # Glossary
-The source code contains a lot of acronyms. I've documented some here.
 
-- ERC - Early Reverse Camera
-    - This refers to the application/process that runs early in the Android boot process
-    - You can find it at `/sbin/earlyrvc` in the recovery image
-- RVC - Reverse Camera
-- HFL - Hands Free Link
-- LVDS - Low Voltage Differential Signalling
-    - This is used in the context of an LVDS serializer
-    - LVDS is commonly used for high-speed video, graphics, and video camera data transfers
-    - It's possible that LVDS is used for the headunit display and/or backup camera; more research is needed to confirm this
+Honda- and Mitsubishi-specific terms that show up in the Display Audio source and firmware.
+
+| Term      | Meaning                            | Notes                                                                                                   | Reference                                                                                                                                          |
+| --------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DA        | Display Audio                      | Honda's name for the headunit                                                                           | https://www.hondainfocenter.com/2021/Civic-Sedan/Feature-Guide/Interior-Features/Display-Audio-with-HondaLink-plus-Apple-CarPlay-and-Android-Auto/ |
+| daupdater | Display Audio Updater              | Vendor binary at `/sbin/daupdater` that scans USB for an update and stages a recovery command           |                                                                                                                                                    |
+| ERC       | Early Reverse Camera               | The process that runs early in the Android boot; found at `/sbin/earlyrvc` in the recovery image        |                                                                                                                                                    |
+| HFL       | HandsFreeLink                      | Honda's hands-free phone system                                                                         | https://mygarage.honda.com/s/honda-handsfreelink-compatibility-check                                                                               |
+| LVDS      | Low-Voltage Differential Signaling | A high-speed serial signaling standard; here, the LVDS serializer drives the instrument cluster display |                                                                                                                                                    |
+| RVC       | Reverse Camera                     | The rear/backup camera                                                                                  |                                                                                                                                                    |

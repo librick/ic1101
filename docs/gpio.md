@@ -1,4 +1,5 @@
 # GPIO
+
 - The infotainment unit makes use of several GPIO pins
 - Many apks and native libraries hard-code specific GPIO numbers
 - They can be accessed and enumerated via a (deprecated) sysfs interface: `/sys/class/gpio`
