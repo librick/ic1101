@@ -1,17 +1,20 @@
 # Extracting Recovery and Boot Images
+
 How to pull recovery and boot partitions from your headunit.
-This assumes that your headunit is rooted.  
+This assumes that your headunit is rooted.
 
 ## Pulling Recovery and Boot from MTD Partitions
 
 First, use `dd` to image the raw `mtdblock<n>` devices:
+
 - `dd if=/dev/block/mtdblock1 of=/sdcard/mtd1-recovery.img`
 - `dd if=/dev/block/mtdblock2 of=/sdcard/mtd2-boot.img`
 
-Copy these images to your workstation via `adb`, FTP, etc.  
+Copy these images to your workstation via `adb`, FTP, etc.\
 See the [headunit adb docs](./adb.md) for more info on connecting to the headunit via ADB.
 
 ## Verifying the Contents of Recovery and Boot Images
+
 The `mtd1-recovery.img` file should start with the magic string `ANDROID!`
 
 `hexdump -C mtd1-recovery.img | head`
@@ -19,22 +22,26 @@ The `mtd1-recovery.img` file should start with the magic string `ANDROID!`
 
 View more information with the `file` command, e.g.,
 On my machine, `file mtd1-recovery.img` yields:
+
 ```
 mtd1-recovery.img: Android bootimg, kernel (0x8000), ramdisk (0x11000000), page size: 2048, cmdline (androidboot.hardware=vcm30t30 androidboot.console=ttyS0 mtdparts=tegra-nor:2M@21504K(USP),8M@4864K(recovery),8M@13056K(boot),2M)
 ```
+
 On my machine, `file mtd2-boot.img` yields:
+
 ```
 mtd2-boot.img: Android bootimg, kernel (0x8000), ramdisk (0x11000000), page size: 2048, cmdline (androidboot.hardware=vcm30t30 androidboot.console=ttyS0 mtdparts=tegra-nor:2M@21504K(USP),8M@4864K(recovery),8M@13056K(boot),2M)
 ```
+
 - `kernel (0x8000)` indicates that the kernel starts at address `0x8000`
 - `ramdisk (0x11000000)` indicates that the ramdisk starts at address `0x11000000`
 
 Note the `mtdparts` argument: `8M@4864K(recovery),8M@13056K(boot)`. This confirms that
+
 - The Android recovery partition starts at NOR flash address 4864K
 - The Android boot partition starts at NOR flash address 13056K
 
 Both of these addresses are within the range (4800:0000, 4fff:ffff) listed as `NOR Flash` in the Tegra 3 SoC "System Memory Map" table.
-
 
 ## Recovery Ramdisk and Boot Ramdisk
 
@@ -49,57 +56,61 @@ I.e., they contain a kernel (zImage) and ramdisk (gzipped cpio archive)
 
 ### Extracting ramdisk from mtd1-recovery.img
 
-1. I checked the structure of `mtd1-recovery.img` using `binwalk`:  
-`binwalk mtd1-recovery.img`  
-which yielded (in part):  
-`5888000 0x59D800 gzip compressed data`  
-2. I carved out the compressed ramdisk from `mtd1-recovery.img` using dd:  
-`dd if=mtd1-recovery.img bs=5888000 skip=1 of=recovery-ramdisk.gz`  
-3. I checked that resulting file was a gzip archive using `file`:  
-`file recovery-ramdisk.gz`  
-4. I extracted `recovery-ramdisk.gz` using `gunzip`:  
-`gunzip -k recovery-ramdisk.gz`  
-5. I confirmed that the resulting file was a cpio archive using `file`:  
-`file recovery-ramdisk`  
-6. I made a new directory to hold the extracted cpio archive:  
-`mkdir out-recovery-ramdisk`  
-7. I copied the cpio archive into the new directory:  
-`cp recovery-ramdisk out-recovery-ramdisk/`  
-8. I changed into the new directory:  
-`cd out-recovery-ramdisk`  
-9. I extracted the cpio archive:  
-`cpio -i < recovery-ramdisk`  
+1. I checked the structure of `mtd1-recovery.img` using `binwalk`:\
+   `binwalk mtd1-recovery.img`\
+   which yielded (in part):\
+   `5888000 0x59D800 gzip compressed data`
+1. I carved out the compressed ramdisk from `mtd1-recovery.img` using dd:\
+   `dd if=mtd1-recovery.img bs=5888000 skip=1 of=recovery-ramdisk.gz`
+1. I checked that resulting file was a gzip archive using `file`:\
+   `file recovery-ramdisk.gz`
+1. I extracted `recovery-ramdisk.gz` using `gunzip`:\
+   `gunzip -k recovery-ramdisk.gz`
+1. I confirmed that the resulting file was a cpio archive using `file`:\
+   `file recovery-ramdisk`
+1. I made a new directory to hold the extracted cpio archive:\
+   `mkdir out-recovery-ramdisk`
+1. I copied the cpio archive into the new directory:\
+   `cp recovery-ramdisk out-recovery-ramdisk/`
+1. I changed into the new directory:\
+   `cd out-recovery-ramdisk`
+1. I extracted the cpio archive:\
+   `cpio -i < recovery-ramdisk`
 
 ### Extracting ramdisk from mtd2-boot.img
-1. I checked the structure of `mtd2-boot.img` using `binwalk`:  
-`binwalk mtd2-boot.img`  
-which yielded (in part):  
-`5888000 0x59D800 gzip compressed data`  
-2. I carved out the compressed ramdisk from `mtd2-boot.img` using dd:  
-`dd if=mtd2-boot.img bs=5888000 skip=1 of=boot-ramdisk.gz`  
-3. I checked that resulting file was a gzip archive using `file`:  
-`file boot-ramdisk.gz`  
-4. I extracted `boot-ramdisk.gz` using `gunzip`:  
-`gunzip -k boot-ramdisk.gz`  
-5. I confirmed that the resulting file was a cpio archive using `file`:  
-`file boot-ramdisk`  
-6. I made a new directory to hold the extracted cpio archive:  
-`mkdir out-boot-ramdisk`  
-7. I copied the cpio archive into the new directory:  
-`cp boot-ramdisk out-boot-ramdisk/`  
-8. I changed into the new directory:  
-`cd out-boot-ramdisk`  
-9. I extracted the cpio archive:  
-`cpio -i < recovery-ramdisk`  
+
+1. I checked the structure of `mtd2-boot.img` using `binwalk`:\
+   `binwalk mtd2-boot.img`\
+   which yielded (in part):\
+   `5888000 0x59D800 gzip compressed data`
+1. I carved out the compressed ramdisk from `mtd2-boot.img` using dd:\
+   `dd if=mtd2-boot.img bs=5888000 skip=1 of=boot-ramdisk.gz`
+1. I checked that resulting file was a gzip archive using `file`:\
+   `file boot-ramdisk.gz`
+1. I extracted `boot-ramdisk.gz` using `gunzip`:\
+   `gunzip -k boot-ramdisk.gz`
+1. I confirmed that the resulting file was a cpio archive using `file`:\
+   `file boot-ramdisk`
+1. I made a new directory to hold the extracted cpio archive:\
+   `mkdir out-boot-ramdisk`
+1. I copied the cpio archive into the new directory:\
+   `cp boot-ramdisk out-boot-ramdisk/`
+1. I changed into the new directory:\
+   `cd out-boot-ramdisk`
+1. I extracted the cpio archive:\
+   `cpio -i < recovery-ramdisk`
 
 ## Appendix: Hardware
+
 The boot ramdisk's `init.vcm30t30.rc` file provides some documentation of
 hardware connected to the headunit and various sysfs interfaces to hardware devices
 and kernel modules.
 
 ### Wi-Fi and Bluetooth (TI WiLink 8)
+
 I know from looking at loaded kernel modules (dynamic analysis) that the headunit uses the TI WiLink 8 chip (wl18xx).
 This is further evidenced by this section of the boot ramdisk's `init.vcm30t30.rc` file:
+
 ```
 # Load WiFi driver
     insmod /system/lib/modules/compat/compat.ko
@@ -111,8 +122,10 @@ This is further evidenced by this section of the boot ramdisk's `init.vcm30t30.r
 ```
 
 ### Gyroscope (A3G4250D)
+
 I know from looking at loaded kernel modules (dynamic analysis) that the headunit uses this MEMS motion sensor gyroscope chip:
 [A3G4250D](https://www.st.com/resource/en/datasheet/a3g4250d.pdf). Cross-referencing this with the `init.vcm30t30.rc` provides good evidence that it's connected to the Tegra 3 SoC via SPI:
+
 ```
 # chown Gyroscope driver sysfs
     chown system system /sys/devices/platform/spi_tegra.4/spi4.2/enable_device
@@ -122,12 +135,15 @@ I know from looking at loaded kernel modules (dynamic analysis) that the headuni
 ```
 
 ### Ramdisks and GPIO
+
 Honda developers provided a few comments in the ramdisk `init.rc` files describing various GPIO pins.
 Given the lack of source code for binaries in `/sbin` (such as `earlyrvc`, the software interface for the reverse camera),
 the comments in these `init.rc` files are relatively useful.
 
 #### Recovery Ramdisk GPIO
+
 The recovery ramdisk's `init.rc` file contains some documentation of GPIO pins:
+
 ```
 write /sys/class/gpio/export 83
     write /sys/class/gpio/export 84
@@ -157,8 +173,11 @@ write /sys/class/gpio/export 83
     write /sys/class/gpio/gpio156/edge "falling"
     write /sys/class/gpio/gpio177/edge "falling"
 ```
+
 #### Boot Ramdisk GPIO
+
 The boot ramdisk's `init.rc` file contains some documentation of GPIO pins:
+
 ```
 # GPIO Setting for LVDS Serializer
     write /sys/class/gpio/export 129
@@ -201,9 +220,11 @@ The boot ramdisk's `init.rc` file contains some documentation of GPIO pins:
 ```
 
 ## Appendix: PPP Files
+
 The headunit does something sketchy with point-to-point protocol (PPP).
 At the time of writing I'm not sure what. It also uses Bluetooth BR/EDR RFCOMM to establish some sort of tunnel
 for HondaLink. The boot ramdisk's `init.vcm30t30.rc` file has a few lines related to PPP that might be of interest:
+
 ```
 # initialize PPP files
 service init_ppp_files /vendor/bin/init_ppp_files.sh
@@ -213,12 +234,12 @@ service init_ppp_files /vendor/bin/init_ppp_files.sh
     disabled
 ```
 
-
-
 ## Appendix: ADB
+
 I rooted my headunit, so some of the adb-specific settings in this repo may not be stock.
 PRs are welcome. I'm curious to have more data points as to what is and isn't part of the stock ramdisk(s).
 In other words, the following lines from the recovery ramdisk's `init.rc` file may not be accurate:
+
 ```
 # Always start adbd on userdebug and eng builds
 on property:ro.debuggable=1
@@ -235,6 +256,7 @@ on property:service.adb.root=1
 ## Appendix: Binwalk Output
 
 Result of `binwalk mtd1-recovery.img`:
+
 ```
 DECIMAL       HEXADECIMAL     DESCRIPTION
 --------------------------------------------------------------------------------
@@ -245,6 +267,7 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 ```
 
 Result of `binwalk mtd2-boot.img`:
+
 ```
 DECIMAL       HEXADECIMAL     DESCRIPTION
 --------------------------------------------------------------------------------

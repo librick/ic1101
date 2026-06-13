@@ -7,4 +7,3 @@ the copyright of Mitsubishi Motors Corporation and/or Honda Motor Co., Ltd.
 
 Binaries are included here for convenience and for those who accidentally
 delete binaries from their headunits.
-

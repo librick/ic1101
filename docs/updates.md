@@ -32,13 +32,21 @@ that allows anyone to generate an update file.
 
 ## Known Versions, Display Audio Software
 
+### Headunits
+
 | Make  | Model | Year | Trim            | DA Version  | Tags           | ROM Type |
 | ----- | ----- | ---- | --------------- | ----------- | -------------- | -------- |
 | Honda | Civic | 2021 | EX Hatchback 4D | `1.F1A5.15` | `release-keys` | `1115`   |
 
+### Update files
+
+| DA Version  | Tags           | ROM Type |
+| ----------- | -------------- | -------- |
+| `1.F197.70` | `release-keys` | `2250`   |
+
 > [!NOTE]
 >
-> Don't see your car in this table? One of the highest-value PRs you can make is to
+> Don't see your car or update file in these table? One of the highest-value PRs you can make is to
 > add yours.
 
 You don't have to modify your headunit to get these values. You just need to connect
