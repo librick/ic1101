@@ -13,10 +13,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/ruff-action@v3
         with:
-          args: check apk-rebuilder/
+          args: "check"
+          src: "apk-rebuilder/"
       - uses: astral-sh/ruff-action@v3
         with:
-          args: format --check apk-rebuilder/
+          args: "format --check"
+          src: "apk-rebuilder/"
 
   pyright:
     runs-on: ubuntu-latest
