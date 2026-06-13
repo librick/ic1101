@@ -24,7 +24,9 @@ uv run src/main.py --overlay-dir examples/empty
 - You should see the progress bar move to 100%; once it does, wait a few seconds, then unplug the USB drive
 - ONLY unplug the USB drive a few seconds AFTER the progress bar reaches 100%; doing so before or after could corrupt your headunit
 
-> [!WARNING] The headunit's recovery is a vendor-provided fork of the AOSP 4.2.2rc1 recovery.
+> [!WARNING]
+>
+> The headunit's recovery is a vendor-provided fork of the AOSP 4.2.2rc1 recovery.
 > It does NOT render ui_print calls in updater-scripts to the screen,
 > so it's impossible to user's step-by-step progress of updates.
 > We use the progress bar as an indicator, paired with an ARMv7 sleep binary that waits for 30 seconds
